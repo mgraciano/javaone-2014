@@ -1,4 +1,7 @@
-javaone-2014
+JavaOne 2014 - Demo Source Code
 ============
 
-JavaOne 2014 Samples
+This is the repository for our JavaOne session demo.
+
+Session ID: CON6423
+Session Title: Scalable JavaScript applications with Project Nashorn
