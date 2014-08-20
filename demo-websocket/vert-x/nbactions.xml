@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-runMod</actionName>
+        <displayName>Run module</displayName>
+        <goals>
+            <goal>antrun:run</goal>
+            <goal>vertx:runMod</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-runMod-debug</actionName>
+        <displayName>Debug module</displayName>
+        <goals>
+            <goal>antrun:run</goal>
+            <goal>vertx:runMod</goal>
+        </goals>
+        <properties>
+            <jpda.listen>maven</jpda.listen>
+        </properties>
+    </action>
+</actions>

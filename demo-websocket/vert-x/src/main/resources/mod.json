@@ -1,0 +1,15 @@
+{
+    "main": "main.js",
+    "deploys": "io.vertx~lang-nashorn~1.0.0-beta3-SNAPSHOT",
+    "includes": "io.vertx~lang-nashorn~1.0.0-beta3-SNAPSHOT",
+
+    "description": "JavaOne Demo - Vert.x",
+    "licenses": ["The MIT License (MIT)"],
+    "author": ["Leonardo Zanivan", "Michel Graciano"],
+
+    "developers": ["Leonardo Zanivan", "Michel Graciano"],
+    "keywords": ["javaone", "vertx", "nashorn"],
+
+    "auto-redeploy": true,
+    "preserve-cwd": true
+}
