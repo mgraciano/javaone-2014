@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Deploy Application</actionName>
+            <displayName>Deploy Application</displayName>
+            <goals>
+                <goal>wildfly:deploy</goal>
+            </goals>
+        </action>
+    </actions>
