@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JavaOne 2014 - CON6423: Scalable JavaScript applications with Project Nashorn</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link type="text/css" rel="stylesheet" href="bootstrap.css" />
+        <script type="text/javascript" src="jquery.js"></script>
+        <script type="text/javascript" src="bootstrap.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p></p>
+                    <div class="jumbotron well">
+                        <h1>JavaOne 2014</h1>
+                        <p>Session ID: CON6423</p>
+                        <p>Session Title: Scalable JavaScript applications with Project Nashorn</p>
+                        <p><a class="btn btn-primary btn-large" href="https://github.com/mgraciano/javaone-2014">Source Code</a></p>
+                    </div>
+                    <div class="btn-group btn-group-lg">
+                        <button id="client-green" class="btn btn-danger btn-large" type="button">&nbsp;&nbsp;Red&nbsp;&nbsp;</button>
+                        <button id="client-red" class="btn btn-success btn-large" type="button">Green</button>
+                        <button id="client-blue" class="btn btn-primary btn-large" type="button">&nbsp;Blue&nbsp;</button>
+                    </div>
+                    <p></p>
+                    <div id="success-alert" class="alert alert-success" style="display:none;">
+                        <h4><strong>Success</strong></h4> Congratulations!
+                    </div>
+                    <p></p>
+                    <div id="error-alert" class="alert alert-danger " style="display:none;">
+                        <h4><strong>Error</strong></h4> Best check yo self, you're not looking too good.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var socket;
+
+            function socketUrl(path) {
+                var l = window.location;
+                return ((l.protocol === "https:") ? "wss://" : "ws://")
+                        + l.hostname + (((l.port !== 80) && (l.port !== 443)) ? ":" + l.port : "")
+                        + l.pathname + path;
+            }
+
+            function connect() {
+                socket = new WebSocket(socketUrl("vertx"));
+
+                socket.onmessage = function(event) {
+                    var data = JSON.parse(event.data);
+                    console.log("Received data", data);
+                    if (data.status) {
+                        if (data.status === "error") {
+                            $("#error-alert").show();
+                        } else {
+                            $("#success-alert").show();
+                        }
+                    }
+                };
+
+                socket.onopen = function(event) {
+                    console.log("WebSocket Open");
+                    sendMessage({tenant: "green"});
+                };
+
+                socket.onclose = function(event) {
+                    console.log("WebSocket Close");
+                };
+
+                socket.onerror = function(event) {
+                    console.log("WebSocket Error");
+                };
+            }
+
+            function sendMessage(data) {
+                socket.send(JSON.stringify(data));
+            }
+
+            connect();
+        </script>
+
+    </body>
+</html>
