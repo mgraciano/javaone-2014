@@ -4,10 +4,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Singleton;
 import org.vertx.java.core.json.JsonObject;
 
-@ApplicationScoped
+@Singleton
 public class RegisteredSockets {
 
     private final Map<String, JsonObject> sockets = new ConcurrentHashMap<>();
@@ -20,10 +20,9 @@ public class RegisteredSockets {
         }
     }
 
-    public Set<String> getSocketsFromTenant(final String tenant) {
+    public Set<JsonObject> getSocketsFromTenant(final String tenant) {
         return sockets.values().stream()
                 .filter(o -> o.getString("tenant").equals(tenant))
-                .map(o -> o.getString("socket"))
                 .collect(Collectors.toSet());
     }
 

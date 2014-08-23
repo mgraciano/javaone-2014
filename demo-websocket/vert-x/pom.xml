@@ -85,11 +85,10 @@
                 <artifactId>vertx-maven-plugin</artifactId>
                 <version>${maven.vertx.plugin.version}</version>
                 <configuration>
-                    <configFile>src/main/conf/config.json</configFile>
+                    <!--<configFile>src/main/conf/config.json</configFile>-->
                     <instances>1</instances>                    
                     <classpath>src/main/resources/:src/test/resources/:src/main/platform_lib/</classpath>
                     <cluster>true</cluster>
-                    <ha>true</ha>
                 </configuration>
                 <dependencies>
                     <dependency>

@@ -6,6 +6,7 @@
         <link type="text/css" rel="stylesheet" href="bootstrap.css" />
         <script type="text/javascript" src="jquery.js"></script>
         <script type="text/javascript" src="bootstrap.js"></script>
+        <script type="text/javascript" src="bootstrap-growl.js"></script>
     </head>
     <body>
         <div class="container">
@@ -18,10 +19,17 @@
                         <p>Session Title: Scalable JavaScript applications with Project Nashorn</p>
                         <p><a class="btn btn-primary btn-large" href="https://github.com/mgraciano/javaone-2014">Source Code</a></p>
                     </div>
-                    <div class="btn-group btn-group-lg">
-                        <button id="client-green" class="btn btn-danger btn-large btn-tenant" disabled type="button">&nbsp;&nbsp;Red&nbsp;&nbsp;</button>
-                        <button id="client-red" class="btn btn-success btn-large btn-tenant" disabled type="button">Green</button>
-                        <button id="client-gold" class="btn btn-warning btn-large btn-tenant" disabled type="button">&nbsp;Gold&nbsp;</button>
+                    <h4>Choose your color:</h4>
+                    <div class="btn-group btn-group-lg" data-toggle="buttons">
+                        <label class="btn btn-danger btn-large btn-tenant" disabled>
+                            <input id="client-red" type="radio" name="options">&nbsp;&nbsp;Red&nbsp;&nbsp;
+                        </label>
+                        <label class="btn btn-success btn-large btn-tenant" disabled>
+                            <input id="client-green" type="radio" name="options">Green
+                        </label>
+                        <label class="btn btn-warning btn-large btn-tenant" disabled>
+                            <input id="client-gold" type="radio" name="options">&nbsp;Gold&nbsp;
+                        </label>
                     </div>
                     <p></p>
                     <div id="success-alert" class="alert alert-info" style="display:none;">
@@ -38,9 +46,11 @@
         <script>
             var socket;
 
-            $("#client-green").click("green", tenantSelect);
-            $("#client-red").click("red", tenantSelect);
-            $("#client-gold").click("gold", tenantSelect);
+            $(document).ready(function() {
+                $("#client-green").change("green", tenantSelect);
+                $("#client-red").change("red", tenantSelect);
+                $("#client-gold").change("gold", tenantSelect);
+            });
 
             socket = new WebSocket(socketUrl("vertx"));
 
@@ -50,9 +60,21 @@
                 if (data.status) {
                     if (data.status === "error") {
                         $("#error-alert").show();
-                    } else {
+                        $("#success-alert").hide();
+                    } else if (data.status === "success") {
                         $("#msg-tenant").html(data.tenant);
                         $("#success-alert").show();
+                        $("#error-alert").hide();
+                    } else if (data.status === "message") {
+                        $.growl({
+                            message: "<strong>New message received:</strong> " + data.message
+                        }, {
+                            allow_dismiss: false,
+                            placement: {
+                                from: "bottom",
+                                align: "center"
+                            }
+                        });
                     }
                 }
             };
@@ -77,7 +99,11 @@
             }
 
             function enableButtons(enabled) {
-                $(".btn-tenant").prop('disabled', !enabled);
+                if (enabled) {
+                    $(".btn-tenant").removeAttr('disabled');
+                } else {
+                    $(".btn-tenant").attr('disabled', 'disabledF');
+                }
             }
 
             function socketUrl(path) {

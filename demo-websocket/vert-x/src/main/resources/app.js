@@ -5,6 +5,7 @@ var container = require("vertx/container");
 var eventBus = require('vertx/event_bus');
 var http = require("vertx/http");
 var matcher = new http.RouteMatcher();
+var UUID = Java.type("java.util.UUID"); //If throws error, you're not running on Nashorn
 
 matcher.noMatch(function(req) {
     if (req.method() === "HEAD") {
@@ -16,9 +17,10 @@ matcher.noMatch(function(req) {
 });
 
 var MDB_ADDRESS = "notification-service";
+var INSTANCE_ID = UUID.randomUUID().toString();
 
 function registerClient(socketId, tenantId, handler) {
-    eventBus.sendWithTimeout(MDB_ADDRESS, {action: "register", socket: socketId, tenant: tenantId}, 5000, handler);
+    eventBus.sendWithTimeout(MDB_ADDRESS, {action: "register", socket: socketId, tenant: tenantId, instance: INSTANCE_ID}, 5000, handler);
 }
 
 function unregisterClient(socketId, handler) {
@@ -58,7 +60,23 @@ var webSocketHandler = function(websocket) {
     }
 };
 
-var port = container.config["port"] || 8090;
+eventBus.registerHandler(INSTANCE_ID, function(message, replier) {
+    container.logger.info("Got message: " + JSON.stringify(message));
+    eventBus.sendWithTimeout(message.socket, JSON.stringify({status: "message", message: message.message}), 5000, function(cause) {
+        if (!cause) {
+            container.logger.info("Message sent to socket " + message.socket + "!");
+        } else {
+            container.logger.error("Error while sending message to socket "
+                    + message.socket + "\nCause: " + cause);
+        }
+    });
+    if (replier) {
+        replier("Got your message: " + message);
+    }
+});
+container.logger.info("Registering handler for instance " + INSTANCE_ID);
+
+var port = container.config["port"] || (Math.floor(Math.random() * (8080 - 8000) + 8000));
 var server = http.createHttpServer()
         .requestHandler(matcher)
         .websocketHandler(webSocketHandler)

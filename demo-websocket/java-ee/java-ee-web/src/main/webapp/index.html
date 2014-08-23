@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JavaOne 2014 - CON6423: Scalable JavaScript applications with Project Nashorn</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link type="text/css" rel="stylesheet" href="bootstrap.css" />
+        <script type="text/javascript" src="jquery.js"></script>
+        <script type="text/javascript" src="bootstrap.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p></p>
+                    <div class="jumbotron well">
+                        <h1>JavaOne 2014</h1>
+                        <p>Session ID: CON6423</p>
+                        <p>Session Title: Scalable JavaScript applications with Project Nashorn</p>
+                        <p><a class="btn btn-primary btn-large" href="https://github.com/mgraciano/javaone-2014">Source Code</a></p>
+                    </div>
+
+                    <h4>Choose your color:</h4>
+                    <div class="btn-group btn-group-lg" data-toggle="buttons">
+                        <label class="btn btn-danger btn-large btn-tenant">
+                            <input id="client-red" type="radio" name="options">&nbsp;&nbsp;Red&nbsp;&nbsp;
+                        </label>
+                        <label class="btn btn-success btn-large btn-tenant">
+                            <input id="client-green" type="radio" name="options">Green
+                        </label>
+                        <label class="btn btn-warning btn-large btn-tenant">
+                            <input id="client-gold" type="radio" name="options">&nbsp;Gold&nbsp;
+                        </label>
+                    </div>
+                    <p></p>
+                    <h4>Write a message:</h4>
+                    <textarea id="message" cols="40" rows="2"></textarea> 
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button id="send" class="btn btn-default btn-block">Send</button>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div id="success-alert" class="alert alert-info" style="display:none;">
+                        <h4><strong>Success</strong></h4> Message sent to <span id="msg-tenant" class="badge"></span>!
+                    </div>
+                    <p></p>
+                    <div id="error-alert" class="alert alert-danger " style="display:none;">
+                        <h4><strong>Error</strong></h4> Something went wrong!
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var tenant;
+
+            $(document).ready(function() {
+                $("#send").click(send);
+                $("#client-green").change("green", tenantSelect);
+                $("#client-red").change("red", tenantSelect);
+                $("#client-gold").change("gold", tenantSelect);
+            });
+
+            function tenantSelect(event) {
+                console.log("Tenant selected", event.data);
+                tenant = event.data;
+            }
+
+            function send() {
+                $.ajax({
+                    url: "notification",
+                    type: "post",
+                    data: "tenant=" + tenant + "&message=" + $("#message").val(),
+                    success: function(response) {
+                        console.log("Send message success", response);
+                        $("#msg-tenant").html(tenant);
+                        $("#success-alert").show();
+                        $("#error-alert").hide();
+                    },
+                    error: function(request, status, error) {
+                        console.log("Send message error", status);
+                        $("#error-alert").show();
+                        $("#success-alert").hide();
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

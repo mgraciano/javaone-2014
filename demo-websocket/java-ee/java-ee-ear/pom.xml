@@ -9,7 +9,6 @@
 
     <groupId>j1</groupId>
     <artifactId>java-ee-ear</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>ear</packaging>
 
     <name>JavaOne Demo - Java EE - EAR</name>

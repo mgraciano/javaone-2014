@@ -9,7 +9,6 @@
 
     <groupId>j1</groupId>
     <artifactId>java-ee-web</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>JavaOne Demo - Java EE - Web</name>
@@ -25,6 +24,25 @@
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>2.1.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>jca-adaptor</artifactId>
+            <version>1.0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>j1</groupId>
+            <artifactId>java-ee-ejb</artifactId>
+            <type>ejb</type>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -47,6 +65,14 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Dependencies>deployment.jca-adaptor-1.0.3.rar meta-inf</Dependencies>
+                        </manifestEntries>
+                    </archive>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
