@@ -19,17 +19,17 @@
                         <p><a class="btn btn-primary btn-large" href="https://github.com/mgraciano/javaone-2014">Source Code</a></p>
                     </div>
                     <div class="btn-group btn-group-lg">
-                        <button id="client-green" class="btn btn-danger btn-large" type="button">&nbsp;&nbsp;Red&nbsp;&nbsp;</button>
-                        <button id="client-red" class="btn btn-success btn-large" type="button">Green</button>
-                        <button id="client-blue" class="btn btn-primary btn-large" type="button">&nbsp;Blue&nbsp;</button>
+                        <button id="client-green" class="btn btn-danger btn-large btn-tenant" disabled type="button">&nbsp;&nbsp;Red&nbsp;&nbsp;</button>
+                        <button id="client-red" class="btn btn-success btn-large btn-tenant" disabled type="button">Green</button>
+                        <button id="client-gold" class="btn btn-warning btn-large btn-tenant" disabled type="button">&nbsp;Gold&nbsp;</button>
                     </div>
                     <p></p>
-                    <div id="success-alert" class="alert alert-success" style="display:none;">
-                        <h4><strong>Success</strong></h4> Congratulations!
+                    <div id="success-alert" class="alert alert-info" style="display:none;">
+                        <h4><strong>Success</strong></h4> Congratulations you're <span id="msg-tenant" class="badge"></span> now!
                     </div>
                     <p></p>
                     <div id="error-alert" class="alert alert-danger " style="display:none;">
-                        <h4><strong>Error</strong></h4> Best check yo self, you're not looking too good.
+                        <h4><strong>Error</strong></h4> Something went wrong!
                     </div>
                 </div>
             </div>
@@ -38,6 +38,48 @@
         <script>
             var socket;
 
+            $("#client-green").click("green", tenantSelect);
+            $("#client-red").click("red", tenantSelect);
+            $("#client-gold").click("gold", tenantSelect);
+
+            socket = new WebSocket(socketUrl("vertx"));
+
+            socket.onmessage = function(event) {
+                var data = JSON.parse(event.data);
+                console.log("Received data", data);
+                if (data.status) {
+                    if (data.status === "error") {
+                        $("#error-alert").show();
+                    } else {
+                        $("#msg-tenant").html(data.tenant);
+                        $("#success-alert").show();
+                    }
+                }
+            };
+
+            socket.onopen = function(event) {
+                console.log("WebSocket Open");
+                enableButtons(true);
+            };
+
+            socket.onclose = function(event) {
+                console.log("WebSocket Close");
+                enableButtons(false);
+            };
+
+            socket.onerror = function(event) {
+                console.log("WebSocket Error");
+            };
+
+            function tenantSelect(event) {
+                console.log("Tenant selected", event.data);
+                sendMessage({tenant: event.data});
+            }
+
+            function enableButtons(enabled) {
+                $(".btn-tenant").prop('disabled', !enabled);
+            }
+
             function socketUrl(path) {
                 var l = window.location;
                 return ((l.protocol === "https:") ? "wss://" : "ws://")
@@ -45,40 +87,9 @@
                         + l.pathname + path;
             }
 
-            function connect() {
-                socket = new WebSocket(socketUrl("vertx"));
-
-                socket.onmessage = function(event) {
-                    var data = JSON.parse(event.data);
-                    console.log("Received data", data);
-                    if (data.status) {
-                        if (data.status === "error") {
-                            $("#error-alert").show();
-                        } else {
-                            $("#success-alert").show();
-                        }
-                    }
-                };
-
-                socket.onopen = function(event) {
-                    console.log("WebSocket Open");
-                    sendMessage({tenant: "green"});
-                };
-
-                socket.onclose = function(event) {
-                    console.log("WebSocket Close");
-                };
-
-                socket.onerror = function(event) {
-                    console.log("WebSocket Error");
-                };
-            }
-
             function sendMessage(data) {
                 socket.send(JSON.stringify(data));
             }
-
-            connect();
         </script>
 
     </body>

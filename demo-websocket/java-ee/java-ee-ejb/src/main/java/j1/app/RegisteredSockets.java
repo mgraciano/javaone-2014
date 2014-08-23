@@ -1,28 +1,30 @@
 package j1.app;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import org.vertx.java.core.json.JsonObject;
 
 @ApplicationScoped
 public class RegisteredSockets {
 
-    private Map<String, JsonObject> sockets = new ConcurrentHashMap<>();
+    private final Map<String, JsonObject> sockets = new ConcurrentHashMap<>();
 
     public void doAction(final JsonObject json) {
         if (json.getValue("action").equals("register")) {
-            put(json);
+            sockets.put(json.getString("socket"), json);
         } else {
-            remove(json);
+            sockets.remove(json.getString("socket"));
         }
     }
 
-    private void put(final JsonObject json) {
-        sockets.putIfAbsent(json.getString("socket"), json);
+    public Set<String> getSocketsFromTenant(final String tenant) {
+        return sockets.values().stream()
+                .filter(o -> o.getString("tenant").equals(tenant))
+                .map(o -> o.getString("socket"))
+                .collect(Collectors.toSet());
     }
 
-    private void remove(final JsonObject json) {
-        sockets.remove(json.getString("socket"));
-    }
 }

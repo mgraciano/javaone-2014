@@ -30,7 +30,7 @@ var webSocketHandler = function(websocket) {
         websocket.closeHandler(function() {
             unregisterClient(websocket.textHandlerID(), function(cause, result) {
                 if (!cause) {
-                    container.logger.info("Socket " + websocket.textHandlerID() + " unregistered");
+                    container.logger.info("Socket " + websocket.textHandlerID() + " unregistered\n" + result);
                 } else {
                     container.logger.error("Error while unregistering socket "
                             + websocket.textHandlerID() + "!\nCause: " + cause);
@@ -43,8 +43,8 @@ var webSocketHandler = function(websocket) {
             if (data.tenant) {
                 registerClient(websocket.textHandlerID(), data.tenant, function(cause, result) {
                     if (!cause) {
-                        websocket.writeTextFrame(JSON.stringify({status: "success"}));
-                        container.logger.info("Socket " + websocket.textHandlerID() + " registered");
+                        websocket.writeTextFrame(JSON.stringify({status: "success", tenant: data.tenant}));
+                        container.logger.info("Socket " + websocket.textHandlerID() + " registered\n" + result);
                     } else {
                         websocket.writeTextFrame(JSON.stringify({status: "error"}));
                         container.logger.error("Error while registering socket "
