@@ -1,0 +1,52 @@
+[
+    {
+        "_id": "5416346864f9d263bec59eac",
+        "givenName": "Victoria",
+        "surName": "Barlow",
+        "age": 59,
+        "gender": "FEMALE",
+        "email": "victoriabarlow@megall.com",
+        "phone": "+55 (926) 531-2234",
+        "address": "394 Indiana Place, Rivereno, Puerto Rico, 1867"
+    },
+    {
+        "_id": "54163468e093062a04ce8bcb",
+        "givenName": "Clarissa",
+        "surName": "Owens",
+        "age": 44,
+        "gender": "FEMALE",
+        "email": "clarissaowens@megall.com",
+        "phone": "+55 (848) 583-2851",
+        "address": "853 Java Street, Eastmont, Louisiana, 4735"
+    },
+    {
+        "_id": "54163468b7165e71184babc3",
+        "givenName": "Janet",
+        "surName": "Hebert",
+        "age": 30,
+        "gender": "FEMALE",
+        "email": "janethebert@megall.com",
+        "phone": "+55 (967) 466-3163",
+        "address": "912 Gates Avenue, Belvoir, Oklahoma, 7290"
+    },
+    {
+        "_id": "54163468de64abbfdb619a49",
+        "givenName": "Lavonne",
+        "surName": "Riddle",
+        "age": 26,
+        "gender": "FEMALE",
+        "email": "lavonneriddle@megall.com",
+        "phone": "+55 (884) 509-3088",
+        "address": "295 Bills Place, Williston, Texas, 1474"
+    },
+    {
+        "_id": "5416346875d7a09f314710fe",
+        "givenName": "Blankenship",
+        "surName": "Becker",
+        "age": 47,
+        "gender": "MALE",
+        "email": "blankenshipbecker@megall.com",
+        "phone": "+55 (914) 505-3663",
+        "address": "866 Bush Street, Irwin, West Virginia, 3086"
+    }
+]
